@@ -5,6 +5,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import SmoothScrollProvider from "../components/providers/SmoothScrollProvider";
 import ScrollProgress from "../components/ui/ScrollProgress";
+import ScrollToTop from "../components/ui/ScrollToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
+          <ScrollToTop />
         </SmoothScrollProvider>
       </body>
     </html>

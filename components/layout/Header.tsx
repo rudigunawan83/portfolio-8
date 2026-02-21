@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 type NavItem = {
@@ -98,22 +99,22 @@ export default function Header(): React.ReactElement {
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((s) => !s)}
-            className="rounded-md bg-white/5 p-2 text-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+            className={`rounded-md p-2 text-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 ${open ? 'bg-black' : 'bg-white/5'}`}
           >
-            <span>{open ? "Close" : "Menu"}</span>
+            <Image src="/menu.png" alt={open ? "Close menu" : "Open menu"} width={20} height={20} />
           </button>
         </div>
       </div>
 
       <AnimatePresence>
-        {open && (
+          {open && (
           <motion.div
             id="mobile-menu"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden mt-2 w-full border-t border-white/5"
+            className="md:hidden mt-2 w-full border-t border-white/5 bg-black"
           >
             <div className="mx-auto flex max-w-3xl flex-col gap-3 px-4 py-4">
               {NAV_ITEMS.map((n) => (

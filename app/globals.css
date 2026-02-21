@@ -49,9 +49,18 @@ button, a, input, textarea {
   font-family: var(--font-family-display);
   font-weight: 800;
   font-style: normal;
-  font-size: 80px;
+  /* scale headline responsively to avoid truncation on small screens */
+  font-size: clamp(1.75rem, 8vw, 80px);
   line-height: 1; /* 100% */
   letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility to clamp text to 3 lines (graceful truncation) */
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

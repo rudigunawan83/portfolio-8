@@ -19,6 +19,12 @@ export default function SmoothScrollProvider({ children }: Props) {
     });
 
     lenisRef.current = lenis;
+    // expose Lenis instance for imperative scroll control (e.g. ScrollToTop)
+    try {
+      (window as any).__lenis = lenis;
+    } catch (e) {
+      // ignore SSR or environment restrictions
+    }
 
     function raf(time: number) {
       lenis.raf(time);
@@ -31,6 +37,11 @@ export default function SmoothScrollProvider({ children }: Props) {
       cancelAnimationFrame(id);
       lenis.destroy();
       lenisRef.current = null;
+      try {
+        delete (window as any).__lenis;
+      } catch (e) {
+        /* ignore */
+      }
     };
   }, []);
 
