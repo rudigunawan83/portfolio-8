@@ -37,9 +37,8 @@ export default function SkillProgressBar({ name, percent, className = "" }: Prop
         ) : (
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-green-400 to-green-500"
-            initial={{ width: 0 }}
-            whileInView={{ width: `${pct}%` }}
-            viewport={{ once: true, amount: 0.6 }}
+            initial={false}
+            animate={{ width: mounted ? `${pct}%` : 0 }}
             transition={{ duration: 0.9, ease: "easeInOut" }}
           />
         )}

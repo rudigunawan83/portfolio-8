@@ -1,59 +1,113 @@
-import AnimatedSection from "../ui/AnimatedSection";
+"use client";
 
-export default function WhyChooseMe(): JSX.Element {
+import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import FeatureItem from "../ui/FeatureItem";
+import ScrollReveal from "../ui/ScrollReveal";
+
+const LEFT_FEATURES = [
+  "React Expert",
+  "Precise Website Implementation",
+  "TypeScript Proficiency",
+  "Clean, Maintainable Code",
+  "Responsive Website Development",
+  "UI Design Proficiency (Figma)",
+];
+
+const RIGHT_FEATURES = [
+  "Basic React Knowledge",
+  "Inconsistent Design Translation",
+  "Little to No TypeScript Knowledge",
+  "Unstructured Code",
+  "Inconsistent Responsiveness",
+  "No Design Skills",
+];
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.06 } },
+};
+
+export default function WhyChooseMe(): React.ReactElement {
   return (
-    <AnimatedSection id="why" className="bg-black/90 py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-10 max-w-2xl">
-          <h2 className="text-3xl font-bold text-white">Why choose me?</h2>
-          <p className="mt-2 text-lg text-zinc-300">
-            I deliver pixel-accurate implementations with a strong focus on
-            performance, accessibility and maintainability.
-          </p>
+    <ScrollReveal>
+      <section id="why" className="bg-black py-32">
+        <div className="mx-auto max-w-7xl px-6 text-center">
+        <div className="mb-4">
+          <span className="text-xs tracking-widest uppercase text-[#A3FF12]">WORKING</span>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2">
-          <div className="space-y-4">
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <span className="mt-1 inline-block h-3 w-3 rounded-full bg-green-400" />
-                <div>
-                  <h3 className="text-lg font-semibold text-white">React & Next.js Expertise</h3>
-                  <p className="mt-1 text-sm text-zinc-300">Modern patterns, App Router, SSR/ISR and optimized images.</p>
-                </div>
-              </li>
+        <h2 className="text-4xl lg:text-5xl font-bold text-white uppercase mb-16">WHY CHOOSE ME?</h2>
 
-              <li className="flex items-start gap-3">
-                <span className="mt-1 inline-block h-3 w-3 rounded-full bg-green-400" />
-                <div>
-                  <h3 className="text-lg font-semibold text-white">Performance First</h3>
-                  <p className="mt-1 text-sm text-zinc-300">Lighthouse-focused, code-splitting and runtime optimizations.</p>
-                </div>
-              </li>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={containerVariants}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-16"
+        >
+          {/* LEFT COLUMN */}
+          <div>
+            <motion.div
+              whileHover={{ y: -6, scale: 1.06, rotate: -2 }}
+              transition={{ duration: 0.25 }}
+              className="mx-auto w-20 h-20 rounded-full overflow-hidden mb-6 cursor-pointer"
+            >
+              <Image
+                src="/profile-left.png"
+                alt="Left profile"
+                width={80}
+                height={80}
+                className="w-full h-full object-cover border border-white/10"
+              />
+            </motion.div>
 
-              <li className="flex items-start gap-3">
-                <span className="mt-1 inline-block h-3 w-3 rounded-full bg-green-400" />
-                <div>
-                  <h3 className="text-lg font-semibold text-white">Accessible & Maintainable</h3>
-                  <p className="mt-1 text-sm text-zinc-300">Semantic markup, ARIA, and clean TypeScript interfaces.</p>
-                </div>
-              </li>
-            </ul>
+            <h3 className="text-lg uppercase text-white font-semibold mb-6">WORKING WITH ME</h3>
+
+            <motion.ul className="space-y-0" variants={containerVariants}>
+              {LEFT_FEATURES.map((f) => (
+                <FeatureItem key={f} text={f} textColor="text-white" />
+              ))}
+            </motion.ul>
           </div>
 
-          <div className="space-y-4">
-            <div className="rounded-lg border border-white/5 bg-white/2 p-6">
-              <h4 className="text-sm font-semibold text-green-400">Working with me</h4>
-              <p className="mt-2 text-sm text-zinc-300">Clear communication, planning, and timely deliveries — I treat your product like my own.</p>
-            </div>
+          {/* RIGHT COLUMN */}
+          <div>
+            <motion.div
+              whileHover={{ y: -6, scale: 1.06, rotate: 2 }}
+              transition={{ duration: 0.25 }}
+              className="mx-auto w-20 h-20 rounded-full overflow-hidden mb-6 cursor-pointer"
+            >
+              <Image
+                src="/profile-right.png"
+                alt="Right profile"
+                width={80}
+                height={80}
+                className="w-full h-full object-cover border border-white/10"
+              />
+            </motion.div>
 
-            <div className="rounded-lg border border-white/5 bg-white/2 p-6">
-              <h4 className="text-sm font-semibold text-green-400">Another talent</h4>
-              <p className="mt-2 text-sm text-zinc-300">I bridge design & engineering, shipping production-ready UIs with smooth interactions.</p>
-            </div>
+            <h3 className="text-lg uppercase text-white font-semibold mb-6">ANOTHER TALENT</h3>
+
+            <motion.ul className="space-y-0" variants={containerVariants}>
+              {RIGHT_FEATURES.map((f) => (
+                <FeatureItem key={f} text={f} textColor="text-zinc-400" />
+              ))}
+            </motion.ul>
           </div>
+        </motion.div>
+
+        <div className="flex justify-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="rounded-full px-10 py-4 bg-[#A3FF12] text-black font-semibold mt-16 shadow-[0_0_40px_rgba(163,255,18,0.4)] transition-transform"
+          >
+            HIRE ME
+          </motion.button>
         </div>
-      </div>
-    </AnimatedSection>
+        </div>
+      </section>
+    </ScrollReveal>
   );
 }

@@ -1,83 +1,123 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, useScroll, useTransform } from "framer-motion";
 import type { ReactElement } from "react";
+import Image from "next/image";
+import AnimatedSection from "../ui/AnimatedSection";
+
+const headingContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.2 } },
+};
+
+const headingLine: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
 
 const labelVariant: Variants = {
   hidden: { opacity: 0, y: 8 },
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
 };
 
-const headingContainer: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
-};
-
-const headingLine: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
 const paraVariant: Variants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.2 } },
 };
 
-const floatAnim: any = {
-  animate: { y: [0, -8, 0] },
-  transition: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-};
-
 export default function AboutMe(): ReactElement {
+  const { scrollY } = useScroll();
+  const leftY = useTransform(scrollY, [0, 1000], [0, -80]);
+  const rightY = useTransform(scrollY, [0, 1000], [0, -120]);
+  const midY = useTransform(scrollY, [0, 1000], [0, -60]);
   return (
-    <section className="relative bg-black py-32 px-6">
-      <div className="mx-auto max-w-7xl text-center relative z-10">
-        <motion.p variants={labelVariant} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-xs tracking-widest text-[#A3FF12] uppercase mb-6">
+    <AnimatedSection id="aboutme" className="relative bg-black py-32 px-6" variants={headingContainer}>
+      <section>
+      <div className="max-w-7xl mx-auto text-center relative">
+        <motion.p variants={labelVariant} className="text-xs uppercase tracking-widest text-[#A3FF12] mb-6">
           ABOUT ME
         </motion.p>
 
-        <motion.div variants={headingContainer} initial="hidden" whileInView="show" viewport={{ once: true }}>
-          <h2 className="inline-block font-bold uppercase leading-tight tracking-tight text-center">
-            <motion.span variants={headingLine} className="block text-4xl md:text-5xl lg:text-6xl text-white">
-              CRAFTING SEAMLESS
-            </motion.span>
+        <div className="relative max-w-5xl mx-auto">
+          <div className="hidden lg:block relative">
+            {/* LEFT IMAGE */}
+            <motion.div
+              initial={{ rotate: -8 }}
+              style={{ y: leftY, transform: "translateZ(0)" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ scale: 1.03, rotate: -6 }}
+              className="absolute left-[-60px] top-[15%] z-10 w-[240px] will-change-transform"
+            >
+              <Image
+                src="/image-left.png"
+                alt="left decor"
+                width={240}
+                height={180}
+                className="object-cover rounded-lg shadow-2xl scale-[0.95] opacity-90"
+              />
+            </motion.div>
 
-            <motion.span variants={headingLine} className="block text-4xl md:text-5xl lg:text-6xl text-[#A3FF12]">
-              HIGH-PERFORMANCE WEB
-            </motion.span>
+            {/* RIGHT IMAGE (TOP) */}
+            <motion.div
+              initial={{ rotate: 6 }}
+              style={{ y: rightY, transform: "translateZ(0)" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ scale: 1.03, rotate: 8 }}
+              className="absolute right-[-60px] top-[10%] z-10 w-[240px] will-change-transform"
+            >
+              <Image
+                src="/image-right.png"
+                alt="right decor"
+                width={240}
+                height={180}
+                className="object-cover rounded-lg shadow-2xl scale-[0.95] opacity-90"
+              />
+            </motion.div>
 
-            <motion.span variants={headingLine} className="block text-4xl md:text-5xl lg:text-6xl text-white">
-              EXPERIENCES
-            </motion.span>
-          </h2>
-        </motion.div>
+            {/* BOTTOM IMAGE removed from global positioning - will be anchored to the word "EXPERIENCES" */}
+          </div>
+          <motion.div variants={headingContainer} className="relative z-20 text-center">
+            <h2 className="font-bold uppercase leading-[1.05] tracking-tight text-4xl md:text-5xl lg:text-6xl max-w-4xl mx-auto">
+              <motion.span variants={headingLine} className="block text-white">
+                CRAFTING SEAMLESS
+              </motion.span>
 
-        <motion.p variants={paraVariant} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-zinc-400 text-base leading-relaxed max-w-3xl mx-auto mt-8">
+              <motion.span variants={headingLine} className="block text-[#A3FF12]">
+                HIGH-PERFORMANCE WEB
+              </motion.span>
+
+              <motion.span variants={headingLine} className="block text-white">
+                <span className="relative inline-block">
+                  EXPERIENCES
+                  <motion.div
+                    initial={{ rotate: 0 }}
+                    style={{ y: midY }}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={{ scale: 1.03, rotate: -6 }}
+                    className="absolute left-full ml-4 bottom-[-20px] w-[117px] z-10 hidden lg:block will-change-transform"
+                  >
+                    <Image
+                      src="/image-mid.png"
+                      alt="decorative"
+                      width={117}
+                      height={88}
+                      className="object-cover rounded-none shadow-2xl scale-[0.95] opacity-100"
+                    />
+                  </motion.div>
+                </span>
+              </motion.span>
+            </h2>
+          </motion.div>
+        </div>
+
+        <motion.p variants={paraVariant} className="text-zinc-400 text-sm leading-relaxed max-w-2xl mx-auto mt-8 z-20">
           I love turning designs into interactive, high-performance websites. With a keen eye for detail and a deep understanding of frontend technologies, I create smooth and visually appealing user experiences.
         </motion.p>
+
+        
       </div>
-
-      {/* Left decorative image */}
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={floatAnim.transition}
-        whileHover={{ scale: 1.03 }}
-        className="hidden lg:block absolute -left-6 top-1/2 -translate-y-1/2 opacity-90 rounded-lg shadow-2xl overflow-hidden rotate-2 z-0"
-      >
-        <Image src="/image-left.png" alt="left decor" width={180} height={120} className="rounded-lg object-cover" />
-      </motion.div>
-
-      {/* Right decorative image */}
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={floatAnim.transition}
-        whileHover={{ scale: 1.03 }}
-        className="hidden lg:block absolute -right-6 top-1/2 -translate-y-1/2 opacity-90 rounded-lg shadow-2xl overflow-hidden -rotate-2 z-0"
-      >
-        <Image src="/image-right.png" alt="right decor" width={180} height={120} className="rounded-lg object-cover" />
-      </motion.div>
-    </section>
+      </section>
+    </AnimatedSection>
   );
 }

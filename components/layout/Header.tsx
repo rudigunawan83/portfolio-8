@@ -1,7 +1,7 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type NavItem = {
@@ -9,25 +9,54 @@ type NavItem = {
   href: string;
 };
 
-const NAV: NavItem[] = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Skill", href: "#skill" },
-  { label: "Projects", href: "#projects" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#contact" },
+const NAV_ITEMS: { label: string; id: string }[] = [
+  { label: "Home", id: "home" },
+  { label: "About", id: "aboutme" },
+  { label: "Skills", id: "skills" },
+  { label: "Projects", id: "portfolio" },
+  { label: "FAQ", id: "faq" },
+  { label: "Contact", id: "contact" },
 ];
 
-export default function Header(): JSX.Element {
+export default function Header(): React.ReactElement {
   const [open, setOpen] = useState(false);
-  const [activeHash, setActiveHash] = useState<string>("#home");
+  const [activeSection, setActiveSection] = useState<string>("home");
 
   useEffect(() => {
-    const updateHash = () => setActiveHash(window.location.hash || "#home");
-    updateHash();
-    window.addEventListener("hashchange", updateHash);
-    return () => window.removeEventListener("hashchange", updateHash);
+    const ids = NAV_ITEMS.map((i) => i.id);
+    const observers: IntersectionObserver[] = [];
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+              setActiveSection(id);
+            }
+          });
+        },
+        { threshold: [0.5] }
+      );
+
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
+
+  function handleClick(id: string) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+
+    // dispatch replay after a short delay to allow scroll to start
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("replay-section", { detail: id }));
+    }, 500);
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-black/40 border-b border-white/10 h-20" role="banner">
@@ -40,21 +69,28 @@ export default function Header(): JSX.Element {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex" role="navigation" aria-label="Main navigation">
-          {NAV.map((n) => {
-            const isActive = activeHash === n.href;
+        <motion.nav layout className="hidden items-center gap-6 md:flex" role="navigation" aria-label="Main navigation">
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeSection === item.id;
             return (
-              <Link
-                key={n.href}
-                href={n.href}
-                className={`relative text-sm transition-colors duration-200 ${isActive ? "text-green-400" : "text-white/80 hover:text-green-400"}`}
+              <button
+                key={item.id}
+                onClick={() => handleClick(item.id)}
+                className={`relative px-2 py-1 text-sm transition-colors duration-300 ${isActive ? "text-[#A3FF12]" : "text-zinc-400 hover:text-white"}`}
               >
-                {n.label}
-                {isActive && <span className="absolute -bottom-3 left-0 h-0.5 w-full bg-green-400 rounded" />}
-              </Link>
+                {item.label}
+
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-underline"
+                    className="absolute left-0 -bottom-1 h-[2px] w-full bg-[#A3FF12]"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
+              </button>
             );
           })}
-        </nav>
+        </motion.nav>
 
         <div className="md:hidden">
           <button
@@ -80,10 +116,17 @@ export default function Header(): JSX.Element {
             className="md:hidden mt-2 w-full border-t border-white/5"
           >
             <div className="mx-auto flex max-w-3xl flex-col gap-3 px-4 py-4">
-              {NAV.map((n) => (
-                <Link key={n.href} href={n.href} onClick={() => setOpen(false)} className="text-zinc-300">
+              {NAV_ITEMS.map((n) => (
+                <button
+                  key={n.id}
+                  onClick={() => {
+                    handleClick(n.id);
+                    setOpen(false);
+                  }}
+                  className="text-zinc-300 text-left w-full"
+                >
                   {n.label}
-                </Link>
+                </button>
               ))}
             </div>
           </motion.div>

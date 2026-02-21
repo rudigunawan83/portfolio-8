@@ -15,29 +15,30 @@ type Props = {
 
 export default function PortfolioCard({ title, subtitle, imageSrc, href = "#", tags = [] }: Props) {
   return (
-    <motion.article
-      whileHover={{ scale: 1.03 }}
-      transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      className="group relative overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-b from-white/2 to-transparent"
-    >
+    <motion.article whileHover={{ y: -4 }} transition={{ duration: 0.35 }} className="group relative rounded-2xl text-left">
       <Link href={href} className="block">
-        <div className="relative h-56 w-full">
-          <Image src={imageSrc} alt={title} fill className="object-cover" />
+        <div className="relative">
+          <div className="overflow-hidden rounded-2xl shadow-sm">
+            <div className="relative w-full aspect-[4/3] transition-transform duration-500 group-hover:scale-105">
+              <Image src={imageSrc} alt={title} fill className="object-cover" />
+              {/* dark overlay on hover */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
+            </div>
+          </div>
+
+          {/* Visit button overlapping bottom of image */}
+          <div className="absolute left-1/2 -bottom-7 -translate-x-1/2 z-10">
+            <div className="opacity-0 group-hover:opacity-100 transform scale-90 group-hover:scale-100 transition-all duration-300">
+              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center border border-white/10 shadow-sm pointer-events-auto">
+                <span className="text-black text-sm font-semibold">Visit</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="p-4">
+        <div className="mt-10 text-left">
           <h3 className="text-lg font-semibold text-white">{title}</h3>
-          {subtitle && <p className="mt-1 text-sm text-zinc-300">{subtitle}</p>}
-
-          {tags.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {tags.map((t) => (
-                <span key={t} className="rounded-full bg-white/3 px-3 py-1 text-xs text-zinc-200">
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
+          {subtitle && <p className="mt-3 text-sm text-zinc-400 leading-relaxed">{subtitle}</p>}
         </div>
       </Link>
     </motion.article>

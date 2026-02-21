@@ -1,23 +1,49 @@
 "use client";
 
-import { PropsWithChildren, useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { PropsWithChildren, useEffect } from "react";
+import { motion, useAnimation, useReducedMotion } from "framer-motion";
 
 type Props = PropsWithChildren<{
-  id?: string;
+  id: string;
   className?: string;
+  variants?: any;
 }>;
 
-export default function AnimatedSection({ id, className = "", children }: Props) {
+const defaultVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+};
+
+export default function AnimatedSection({ id, className = "", children, variants = defaultVariants }: Props) {
   const shouldReduce = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
+  const controls = useAnimation();
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    // ensure we don't render initial motion styles on the server
+    // set the hidden state on the client and then play the section's visible animation
+    controls.set("hidden");
 
-  // Render static markup on server and until the client mounts.
-  if (shouldReduce || !mounted) {
+    const startKey = variants && typeof variants === "object"
+      ? // prefer common variant names used across the codebase
+        (variants.hasOwnProperty("show") ? "show" : "visible")
+      : "visible";
+
+    controls.start(startKey as any);
+
+    const handler = (e: any) => {
+      if (!e?.detail) return;
+      if (e.detail === id) {
+        controls.set("hidden");
+        const startKey2 = variants && typeof variants === "object" ? (variants.hasOwnProperty("show") ? "show" : "visible") : "visible";
+        setTimeout(() => controls.start(startKey2 as any), 50);
+      }
+    };
+
+    window.addEventListener("replay-section", handler as EventListener);
+    return () => window.removeEventListener("replay-section", handler as EventListener);
+  }, [controls, id]);
+
+  if (shouldReduce) {
     return (
       <section id={id} className={className}>
         {children}
@@ -26,14 +52,7 @@ export default function AnimatedSection({ id, className = "", children }: Props)
   }
 
   return (
-    <motion.section
-      id={id}
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, ease: "easeInOut" }}
-      className={className}
-    >
+    <motion.section id={id} className={className} initial={false} animate={controls} variants={variants}>
       {children}
     </motion.section>
   );

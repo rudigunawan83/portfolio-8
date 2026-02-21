@@ -38,7 +38,7 @@ const item: Variants = {
 
 function AnimatedHeading({ lines = ["BUILDING FAST &", "INTERACTIVE WEB", "EXPERIENCES."], className = "" }: AnimatedHeadingProps) {
   return (
-    <motion.h1 variants={container} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className={`display-heading font-extrabold uppercase leading-[0.9] tracking-tight ${className}`}>
+    <motion.h1 variants={container} className={`display-heading font-extrabold uppercase leading-[0.9] tracking-tight ${className}`}>
       <motion.span variants={item} className="block text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white">
         {lines[0]}
       </motion.span>
@@ -47,7 +47,7 @@ function AnimatedHeading({ lines = ["BUILDING FAST &", "INTERACTIVE WEB", "EXPER
         <span className="text-green-400">{lines[1].replace("INTERACTIVE","INTERACTIVE")}</span>
       </motion.span>
 
-      <motion.span variants={item} className="block text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white">
+        <motion.span variants={item} className="block text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white">
         {lines[2]}
       </motion.span>
     </motion.h1>
@@ -81,7 +81,7 @@ export default function HeroLeft() {
 
         <AnimatedHeading className="text-white" />
 
-        <motion.p initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="max-w-xl text-lg text-gray-400 mt-6 leading-relaxed">
+        <motion.p variants={item} className="max-w-xl text-lg text-gray-400 mt-6 leading-relaxed">
           Bridging creativity and functionality to deliver stunning, user-friendly web applications
         </motion.p>
 

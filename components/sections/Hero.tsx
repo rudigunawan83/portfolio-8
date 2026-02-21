@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion, Variants } from "framer-motion";
 import GradientButton from "../ui/GradientButton";
+import AnimatedSection from "../ui/AnimatedSection";
 import { ReactElement } from "react";
 
 const container: Variants = {
@@ -21,16 +22,10 @@ const item: Variants = {
 
 export default function Hero(): ReactElement {
   return (
-    <section className="relative overflow-hidden bg-black">
+    <AnimatedSection id="home" className="relative overflow-hidden bg-black" variants={container}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 pb-24 pt-20">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
-          <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            className="flex flex-col gap-6"
-          >
+          <motion.div variants={container} className="flex flex-col gap-6">
             <motion.div variants={item} className="flex items-center gap-4">
               <span className="inline-block h-px w-12 bg-zinc-700" />
               <p className="text-sm font-medium uppercase tracking-wider text-zinc-400">Hi, I am Edwin Anderson Frontend Developer</p>
@@ -59,14 +54,8 @@ export default function Hero(): ReactElement {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="relative flex items-center justify-end"
-          >
-            <motion.div whileInView={{ scale: 1.03 }} transition={{ duration: 6 }} className="relative w-full max-w-[420px] md:max-w-[660px] h-auto overflow-hidden ml-auto">
+          <motion.div variants={item} className="relative flex items-center justify-end">
+            <motion.div className="relative w-full max-w-[420px] md:max-w-[660px] h-auto overflow-hidden ml-auto">
               <Image src="/profile-image.png" alt="Profile image" width={660} height={874} className="w-full h-auto object-cover" priority />
 
               {/* green half-overlay - hide on small screens */}
@@ -86,6 +75,6 @@ export default function Hero(): ReactElement {
           </motion.div>
         </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 }
